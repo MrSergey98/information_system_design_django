@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="csrf_token" content="{{ csrf_token }}">
-    <title>Clients</title>
+    <title>Vouchers</title>
     <style>
           body {
               align-items: center;
@@ -46,27 +46,23 @@
 <body>
   <table>
     <tr>
-      <th>Email</th>
-      <th>Имя</th>
-      <th>Фамилия</th>
-      <th>Отчество</th>
-      <th>Удалить клиента</th>
+      <th>Место</th>
+      <th>Дата</th>
+      <th>Удалить путевку</th>
       <th>Просмотр деталей</th>
       <th>Обновить данные</th>
     </tr>
-  {% for client in clients %}
+  {% for voucher in object_list %}
     <tr>
-      <td>{{ client.email }}</td>
-      <td>{{ client.firstname }}</td>
-      <td>{{ client.surname }}</td>
-      <td>{{ client.fathers_name }}</td>
-      <td><button onclick="deleteClient({{ client.id }})">Удалить</button></td> {% csrf_token %}
-      <td><a href="{% url 'details_client' client.id %}">Детали</a></td>
-      <td><a href="{% url 'client_update' client.id %}">Обновить</a></td>
+      <td>{{ voucher.place }}</td>
+      <td>{{ voucher.date }}</td>
+      <td><button onclick="deleteClient({{ voucher.id }})">Удалить</button></td> {% csrf_token %}
+      <td><a href="{% url 'voucher_details' voucher.id %}">Детали</a></td>
+      <td><a href="{% url 'voucher_update' voucher.id %}">Обновить</a></td>
     </tr>
   {% endfor %}
   </table>
-  <a href="{% url 'create_client' %}">Создать клиента</a>
+  <a href="{% url 'voucher_create' %}">Создать путевку</a>
   <a style="margin: 5px;" href="{% url 'main_page' %}">Главная страница</a>
 
   {% csrf_token %}
@@ -75,7 +71,7 @@
   function deleteClient(id) {
 
     const request = new Request(
-        `/client_delete/${id}/`,
+        `/purchases/voucher_delete/${id}/`,
         {
             method: 'POST',
             headers: {'X-CSRFToken': csrftoken},

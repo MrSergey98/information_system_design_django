@@ -11,10 +11,6 @@ from firma.forms import ClientForm
 from firma.models import Client
 
 
-def main_page(request):
-    return render(request, 'firma/index.html')
-
-
 def clients(request):
     return render(request, 'firma/clients.html', {'clients': Client.objects.all()})
 

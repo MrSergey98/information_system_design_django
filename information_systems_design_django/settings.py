@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'information_systems_design_django',
     'firma.apps.FirmaConfig',
+    'purchases.apps.PurchasesConfig',
 ]
 
 MIDDLEWARE = [

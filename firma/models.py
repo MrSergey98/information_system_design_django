@@ -33,3 +33,6 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+
+    def __str__(self):
+        return f'{self.email} {self.surname} {self.firstname}'

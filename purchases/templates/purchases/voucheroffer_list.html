@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="csrf_token" content="{{ csrf_token }}">
-    <title>Clients</title>
+    <title>Voucher Offers</title>
     <style>
           body {
               align-items: center;
@@ -46,27 +46,25 @@
 <body>
   <table>
     <tr>
-      <th>Email</th>
-      <th>Имя</th>
-      <th>Фамилия</th>
-      <th>Отчество</th>
-      <th>Удалить клиента</th>
+      <th>Клиент</th>
+      <th>Путевка</th>
+      <th>Удалить предложение</th>
       <th>Просмотр деталей</th>
       <th>Обновить данные</th>
+      <th>Провести покупку</th>
     </tr>
-  {% for client in clients %}
+  {% for voucher_offer in object_list %}
     <tr>
-      <td>{{ client.email }}</td>
-      <td>{{ client.firstname }}</td>
-      <td>{{ client.surname }}</td>
-      <td>{{ client.fathers_name }}</td>
-      <td><button onclick="deleteClient({{ client.id }})">Удалить</button></td> {% csrf_token %}
-      <td><a href="{% url 'details_client' client.id %}">Детали</a></td>
-      <td><a href="{% url 'client_update' client.id %}">Обновить</a></td>
+      <td>{{ voucher_offer.client }}</td>
+      <td>{{ voucher_offer.voucher }}</td>
+      <td><button onclick="deleteClient('{{ voucher_offer.uuid }}')">Удалить</button></td> {% csrf_token %}
+      <td><a href="{% url 'voucher_offer_details' voucher_offer.uuid %}">Детали</a></td>
+      <td><a href="{% url 'voucher_offer_update' voucher_offer.uuid %}">Обновить</a></td>
+      <td><button onclick="buyVoucherOffer('{{ voucher_offer.uuid }}')">Провести</button></td>
     </tr>
   {% endfor %}
   </table>
-  <a href="{% url 'create_client' %}">Создать клиента</a>
+  <a href="{% url 'voucher_offer_create' %}">Создать путевку</a>
   <a style="margin: 5px;" href="{% url 'main_page' %}">Главная страница</a>
 
   {% csrf_token %}
@@ -75,7 +73,23 @@
   function deleteClient(id) {
 
     const request = new Request(
-        `/client_delete/${id}/`,
+        `/purchases/voucher_offer_delete/${id}/`,
+        {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin' // Do not send CSRF token to another domain.
+        }
+    );
+    fetch(request).then(function(response) {
+        location.reload();
+    });
+  }
+  </script>
+  <script>
+  function buyVoucherOffer(id) {
+
+    const request = new Request(
+        `/purchases/buy_voucher_offer/${id}/`,
         {
             method: 'POST',
             headers: {'X-CSRFToken': csrftoken},
