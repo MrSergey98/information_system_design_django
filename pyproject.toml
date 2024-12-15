@@ -1,14 +1,17 @@
 [tool.poetry]
 name = "information-systems-design-django"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["MrSergey <mrsergey98@mail.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.8.5"
+python = "3.11.0"
 django = "4.2"
 psycopg2-binary = "2.9.9"
+markdown = "^3.7"
+django-filter = "^24.3"
+djangorestframework = "^3.15.2"
 
 
 [build-system]
