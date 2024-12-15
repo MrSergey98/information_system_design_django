@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf_token" content="{{ csrf_token }}">
+    <title>Clients</title>
+    <style>
+          body {
+              align-items: center;
+              display: flex;
+              flex-direction: column;
+          }
+          a {
+              appearance: auto;
+              cursor: default;
+              padding-block: 1px;
+              padding-inline: 6px;
+              background-color: buttonface;
+              border: 1px solid black;
+              border-radius: 2px;
+              outline: none;
+              color: black;
+              text-decoration: none;
+          }
+          table {
+              width: 50%;
+              margin-bottom: 20px;
+              border: 1px solid #dddddd;
+              border-collapse: collapse;
+          }
+          table th {
+              font-weight: bold;
+              padding: 5px;
+              background: #efefef;
+              border: 1px solid #dddddd;
+          }
+          table td {
+              border: 1px solid #dddddd;
+              padding: 5px;
+          }
+          td {
+              text-align: center;
+          }
+      </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>Email</th>
+      <th>Имя</th>
+      <th>Фамилия</th>
+      <th>Отчество</th>
+      <th>Удалить клиента</th>
+      <th>Просмотр деталей</th>
+      <th>Обновить данные</th>
+    </tr>
+  {% for client in clients %}
+    <tr>
+      <td>{{ client.email }}</td>
+      <td>{{ client.firstname }}</td>
+      <td>{{ client.surname }}</td>
+      <td>{{ client.fathers_name }}</td>
+      <td><button onclick="deleteClient({{ client.id }})">Удалить</button></td> {% csrf_token %}
+      <td><a href="{% url 'details_client' client.id %}">Детали</a></td>
+      <td><a href="{% url 'client_update' client.id %}">Обновить</a></td>
+    </tr>
+  {% endfor %}
+  </table>
+  <a href="{% url 'create_client' %}">Создать клиента</a>
+
+  {% csrf_token %}
+  <script>
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  function deleteClient(id) {
+
+    const request = new Request(
+        `/client_delete/${id}/`,
+        {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin' // Do not send CSRF token to another domain.
+        }
+    );
+    fetch(request).then(function(response) {
+        location.reload();
+    });
+  }
+  </script>
+</body>
+</html>

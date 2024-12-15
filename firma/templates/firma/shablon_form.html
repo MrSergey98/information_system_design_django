@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ view }}</title>
+    <style>
+        * {
+            margin: 5px;
+        }
+        form {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            appearance: auto;
+            cursor: default;
+            padding-block: 1px;
+            padding-inline: 6px;
+            background-color: buttonface;
+            border: 1px solid black;
+            border-radius: 2px;
+            outline: none;
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <label>Email:</label>
+    {{ form.email }}
+
+    <label>Имя:</label>
+    {{ form.firstname }}
+
+    <label>Фамилия:</label>
+    {{ form.surname }}
+
+    <label>Отчество:</label>
+    {{ form.fathers_name }}
+
+    <label>Телефон:</label>
+    {{ form.phone_number }}
+
+    <label>Паспорт:</label>
+    {{ form.pasport }}
+
+    <label>Баланс:</label>
+    {{ form.balance }}
+
+    <a href="{% url 'main_page' %}">На главную</a>
+    <a href="{% url 'clients' %}">На страницу клиентов</a>
+</body>
+</html>
