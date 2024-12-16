@@ -16,11 +16,12 @@ class Client(models.Model):
             )
         ]
     )
-    firstname = models.CharField(verbose_name='Имя')
-    surname = models.CharField(verbose_name='Фамилия')
-    fathers_name = models.CharField(verbose_name='Отчество', blank=True, null=True)
+    firstname = models.CharField(verbose_name='Имя', max_length=50)
+    surname = models.CharField(verbose_name='Фамилия', max_length=50)
+    fathers_name = models.CharField(verbose_name='Отчество', max_length=50, blank=True, null=True)
     pasport = models.CharField(
         verbose_name='Паспорт',
+        max_length=15,
         validators=[
             RegexValidator(
                 regex='^\d{6} \d{4}$',

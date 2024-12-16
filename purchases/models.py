@@ -9,7 +9,7 @@ from firma.models import Client
 class Voucher(models.Model):
     """Модель путевки"""
 
-    place = models.CharField(verbose_name='Место')
+    place = models.CharField(verbose_name='Место', max_length=100)
     date = models.DateTimeField(verbose_name='Дата')
     duration = models.FloatField(verbose_name='Длительность (в часах)', validators=[MinValueValidator(0)])
 
@@ -40,7 +40,7 @@ class VoucherOffer(models.Model):
     voucher = models.ForeignKey(Voucher, models.SET_NULL, verbose_name='Путевка', null=True, related_name='voucher_offers')
     price = models.FloatField(verbose_name='Цена', validators=[MinValueValidator(0)])
     discount = models.IntegerField(verbose_name='Скидка', default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    status = models.CharField(choices=VoucherOfferChoices.CHOICES)
+    status = models.CharField(choices=VoucherOfferChoices.CHOICES, max_length=20)
 
     class Meta:
         verbose_name = 'Предложение путевки'

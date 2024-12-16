@@ -1,24 +1,8 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 
-<style>
-  body {
-    text-align: center;
-  }
-  a {
-    appearance: auto;
-    cursor: default;
-    padding-block: 1px;
-    padding-inline: 6px;
-    background-color: buttonface;
-    border: 1px solid black;
-    border-radius: 2px;
-    outline: none;
-    color: black;
-    text-decoration: none;
-  }
-  * {
-    margin: 5px;
-  }
-</style>
 <form style="display: flex; flex-direction: column; align-items: center;" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="{% if view_name == 'create' %}Создать{% else %}Обновить{% endif %}">

@@ -1,36 +1,10 @@
-<!DOCTYPE html>
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>{{ view }}</title>
-    <style>
-        * {
-            margin: 5px;
-        }
-        form {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-        }
-
-        body {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-        }
-        a {
-            appearance: auto;
-            cursor: default;
-            padding-block: 1px;
-            padding-inline: 6px;
-            background-color: buttonface;
-            border: 1px solid black;
-            border-radius: 2px;
-            outline: none;
-            color: black;
-            text-decoration: none;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <label>Email:</label>
