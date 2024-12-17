@@ -1,10 +1,25 @@
 {% load static %}
+{% load custom_filters %}
 <head>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <form method="post">{% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+        {{ field.label_tag }}
+        {% if view_name == 'details' %}
+            {{ field|add_attr:"disabled:true" }}
+        {% else %}
+            {{ field }}
+        {% endif %}
+        {% if field.errors %}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
     {% if view_name != 'details' %}
         <input type="submit" value="{% if view_name == 'create' %}Создать{% else %}Обновить{% endif %}">
     {% endif %}

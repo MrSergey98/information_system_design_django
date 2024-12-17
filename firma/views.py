@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
 from rest_framework import status
 
 from django.views.generic.edit import CreateView, UpdateView
@@ -14,24 +15,19 @@ from firma.models import Client
 def clients(request):
     return render(request, 'firma/clients.html', {'clients': Client.objects.all()})
 
+class ClientDetailsView(DetailView):
+    template_name_suffix = '_form'
+    model = Client
+    fields = ClientForm.Meta.fields
 
-def details_client(request, pk):
-    client = get_object_or_404(Client, pk=pk)
-    context = {
-        'view': 'client_new',
-        'form': ClientForm(
-            {
-                'email': client.email,
-                'firstname': client.firstname,
-                'surname': client.surname,
-                'fathers_name': client.fathers_name,
-                'balance': client.balance,
-                'phone_number': client.phone_number,
-                'pasport': client.pasport,
-            }
-        ),
-    }
-    return render(request, 'firma/shablon_form.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        object_ = context.get('object')
+        context['view_name'] = 'details'
+        form = ClientForm(instance=object_, initial={'email': object_.email})
+
+        context['form'] = form
+        return context
 
 
 @require_POST

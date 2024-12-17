@@ -1,13 +1,11 @@
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic import UpdateView, CreateView, ListView, DetailView, DeleteView
 from rest_framework import status
-from rest_framework.response import Response
 
-from firma.views import clients
 from purchases.forms import VoucherForm, VoucherOfferForm
 from purchases.models import Voucher, VoucherOffer
 
@@ -68,6 +66,7 @@ class VoucherDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         object_ = context.get('object')
+        context['view_name'] = 'details'
         context['form'] = VoucherForm(
             {field: getattr(object_, field) for field in VOUCHER_FIELDS}
         )
@@ -120,6 +119,7 @@ class VoucherOfferDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         object_ = context.get('object')
+        context['view_name'] = 'details'
         context['form'] = VoucherOfferForm(
             {field: getattr(object_, field) for field in VOUCHER_OFFER_FIELDS}
         )
@@ -135,10 +135,14 @@ class VoucherOfferDeleteView(DeleteView):
 @transaction.atomic
 def buy_voucher_offer(request, pk):
     voucher_offer: VoucherOffer = VoucherOffer.objects.get(pk=pk)
+    if not voucher_offer.client:
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Для предложения путевки не выбран клиент'})
+    if voucher_offer.status != voucher_offer.VoucherOfferChoices.OPEN:
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Предложение путевки закрыто или уже оплачено'})
     voucher_offer.client.balance -= voucher_offer.price*(1-voucher_offer.discount/100)
     if voucher_offer.client.balance < 0:
-        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Недостаточно средств'})
     voucher_offer.client.save()
     voucher_offer.status = voucher_offer.VoucherOfferChoices.PAYED
     voucher_offer.save()
-    return HttpResponse(status=status.HTTP_200_OK)
+    return JsonResponse(status=status.HTTP_200_OK, data={'message': 'Предложение путевки успешно оплачено'})

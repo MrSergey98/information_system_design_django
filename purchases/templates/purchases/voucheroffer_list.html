@@ -51,18 +51,23 @@
   </script>
   <script>
   function buyVoucherOffer(id) {
-
     const request = new Request(
         `/purchases/buy_voucher_offer/${id}/`,
         {
             method: 'POST',
-            headers: {'X-CSRFToken': csrftoken},
-            mode: 'same-origin' // Do not send CSRF token to another domain.
+            headers: { 'X-CSRFToken': csrftoken },
+            mode: 'same-origin'
         }
     );
-    fetch(request).then(function(response) {
-        location.reload();
-    });
+
+    fetch(request)
+        .then(response => response.json()) // Разбираем ответ в формат JSON
+        .then(data => {
+            alert(data.message); // Показываем сообщение
+        })
+        .catch(error => {
+            console.error('Произошла ошибка:', error);
+        });
   }
   </script>
 </body>
